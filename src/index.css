@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@font-face {
+  font-family: 'SaiyanSans';
+  src: url('/fonts/Saiyan-Sans.ttf') format('truetype');
+}
+
+.saiyan {
+  font-family: 'SaiyanSans', sans-serif;
+}
