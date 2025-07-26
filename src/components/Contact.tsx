@@ -59,7 +59,7 @@ const Contact = () => {
             viewport={{ once: true }}
             className="text-xl text-gray-300 mb-12 leading-relaxed"
           >
-            I'm always open for internships, freelance gigs, interesting projects or dicussion on animes. 
+            I'm always open for internships, freelance gigs, interesting projects or discussion on animes. 
             Let's create something amazing together!
           </motion.p>
           
@@ -99,7 +99,6 @@ const Contact = () => {
                     />
                   </motion.div>
                   
-                  {/* Tooltip */}
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     whileHover={{ opacity: 1, y: 0 }}
@@ -109,7 +108,6 @@ const Contact = () => {
                     <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
                   </motion.div>
                   
-                  {/* Energy aura effect */}
                   <motion.div
                     className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
@@ -131,7 +129,6 @@ const Contact = () => {
         </motion.div>
       </div>
       
-      {/* Footer */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
