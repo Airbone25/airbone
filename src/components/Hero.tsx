@@ -1,140 +1,110 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { portfolioData } from '../data/portfolioData';
 
 const Hero = () => {
-  const roles = ['a Developer', 'a Gamer', 'a Goku Fan'];
-  const [currentRole, setCurrentRole] = useState(0);
+  const { hero } = portfolioData;
+  const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
-  const index = useRef(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [typingSpeed, setTypingSpeed] = useState(150);
 
   useEffect(() => {
-    const currentRoleText = roles[currentRole];
-    let typingInterval: ReturnType<typeof setInterval>;
+    const handleTyping = () => {
+      const currentRole = hero.roles[roleIndex];
+      
+      if (isDeleting) {
+        setDisplayText(prev => prev.substring(0, prev.length - 1));
+        setTypingSpeed(50);
+      } else {
+        setDisplayText(currentRole.substring(0, displayText.length + 1));
+        setTypingSpeed(150);
+      }
 
-    if (isTyping) {
-      typingInterval = setInterval(() => {
-        if (index.current < currentRoleText.length) {
-          setDisplayText(currentRoleText.slice(0, index.current + 1));
-          index.current++;
-        } else {
-          clearInterval(typingInterval);
-          setTimeout(() => {
-            setIsTyping(false);
-          }, 1000);
-        }
-      }, 100);
-    } else {
-      typingInterval = setInterval(() => {
-        if (index.current > 0) {
-          setDisplayText(currentRoleText.slice(0, index.current - 1));
-          index.current--;
-        } else {
-          clearInterval(typingInterval);
-          setCurrentRole((prev) => (prev + 1) % roles.length);
-          setIsTyping(true);
-        }
-      }, 100);
-    }
-
-    return () => {
-      clearInterval(typingInterval);
+      if (!isDeleting && displayText === currentRole) {
+        setTimeout(() => setIsDeleting(true), 2000);
+      } else if (isDeleting && displayText === '') {
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % hero.roles.length);
+      }
     };
-  }, [currentRole, isTyping, roles]);
+
+    const timer = setTimeout(handleTyping, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, roleIndex, hero.roles, typingSpeed]);
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
+    <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-950">
+      {/* Sleek Radial Gradient Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            background: `radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%)`
           }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl"
         />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: `radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 40%)`
           }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl"
         />
       </div>
 
-      <div className="relative z-10 text-center px-6">
+      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="mb-8"
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
         >
-          <motion.h1
-            className="text-4xl md:text-7xl font-bold text-white mb-6"
+          <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.2 }}
+            className="text-indigo-400 font-medium tracking-widest uppercase text-sm mb-4"
           >
-            I'm{' '}
-            <motion.span
-              className="text-[#fbbc42] font-normal saiyan"
-            >
-              Keshav Mehra
-            </motion.span>
-          </motion.h1>
+            Welcome to my universe
+          </motion.p>
           
+          <h1 className="text-5xl md:text-8xl font-bold mb-8 tracking-tight text-shiny">
+            I'm <span className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">Keshav Mehra</span>
+          </h1>
+          
+          <div className="text-2xl md:text-4xl font-light text-slate-400 h-12 mb-12 flex items-center justify-center">
+            <span className="mr-3">I'm</span>
+            <span className="text-white font-medium border-r-2 border-indigo-500 pr-2 min-w-[20px] text-glow-indigo">
+              {displayText}
+            </span>
+          </div>
+
           <motion.div
-            className="text-2xl md:text-4xl text-blue-400 h-16 flex items-center justify-center"
-            key={currentRole}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            I'm {displayText}
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.5, repeat: Infinity }}
-              className="ml-1 text-orange-400"
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2, boxShadow: '0 0 20px rgba(255,255,255,0.2)' }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 bg-white text-slate-950 font-bold rounded-full shadow-2xl shadow-white/5 hover:bg-slate-100 transition-all duration-300 w-full sm:w-auto"
             >
-              |
-            </motion.span>
+              {hero.ctaPrimary}
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.3)' }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 border border-white/10 text-white font-medium rounded-full backdrop-blur-md transition-all duration-300 w-full sm:w-auto glass-card"
+            >
+              {hero.ctaSecondary}
+            </motion.button>
           </motion.div>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex justify-center space-x-6 mt-12"
-        >
-          <motion.button
-            whileHover={{ 
-              scale: 1.05,
-            }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold rounded-full shadow-lg hover:shadow-orange-500/50 transition-all duration-300"
-          >
-            View My Work
-          </motion.button>
-          <motion.button
-            whileHover={{ 
-              scale: 1.05,
-            }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-3 border-2 border-blue-500 text-blue-400 font-semibold rounded-full hover:bg-blue-500/10 transition-all duration-300"
-          >
-            Get In Touch
-          </motion.button>
-        </motion.div>
       </div>
+
+      {/* Decorative subtle lines */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 };
