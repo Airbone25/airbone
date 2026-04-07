@@ -123,8 +123,8 @@ export const portfolioData = {
       title: 'VeriMail',
       description: 'VeriMail is a robust, full-stack multi-tenant email verification API platform designed for high-volume validation and scalability',
       techStack: ['Nodejs','ExpressJS','PostgreSQL','Redis','NextJS','Zustand'],
-      githubLink: 'https://github.com/Airbone25/Beautify-Photo-Editor',
-      liveLink: 'https://beautify-photo-editor.vercel.app/',
+      githubLink: 'https://github.com/Airbone25/VeriMail',
+      liveLink: 'https://veri-mail.vercel.app/',
     },
     {
       title: 'Manga-kun',
